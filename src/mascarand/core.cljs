@@ -7,7 +7,8 @@
 ;; -------------------------
 ;; Views
 
-(defonce state (r/atom {:players 6}))
+(defonce state (r/atom {:players 6
+                        :expansion true}))
 
 (defn home-page []
   [:div [:h2 "Mascarand"]
@@ -16,7 +17,11 @@
                                   :max       13
                                   :on-change (fn [event] (swap! state assoc :players (js/parseInt (-> event .-target .-value))))
                                   :value     (:players @state)}]
-   [:div [:button {:on-click (fn [] (swap! state assoc :cards (mascarand.logic/randomize (:players @state))))}
+   [:div "Include expansion" [:input {:type     :checkbox
+                                      :checked  (:expansion @state)
+                                      :on-click (fn [event] (swap! state assoc :expansion (-> event .-target .-checked)))}]]
+   [:div [:button {:on-click (fn [] (swap! state assoc :cards (mascarand.logic/randomize (:players @state)
+                                                                                         (when-not (:expansion @state) :exclude-expansion ))))}
           "Randomize"]]
    [:div {} (->> (:cards @state)
                  (map (fn [cardname]
