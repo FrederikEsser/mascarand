@@ -9,3 +9,9 @@
 
 (defn cljs []
  (ra/cljs-repl))
+
+(defn start []
+ (start-fw)
+ #_(cljs))
+
+(start)
